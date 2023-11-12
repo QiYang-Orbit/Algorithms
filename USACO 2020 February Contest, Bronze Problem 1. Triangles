@@ -1,0 +1,49 @@
+http://usaco.org/index.php?page=viewproblem2&cpid=1011&lang=en
+
+使用暴力穷举的方法，遍历所有可能的三个栅栏柱子的组合，然后计算这些组合能够组成的三角形的面积，并找出最大的面积。
+#include <iostream>
+#include <vector>
+using namespace std;
+using ll = long long;
+
+int main() {
+  // 从文件 "triangles.in" 中读取输入数据，并将结果输出到文件 "triangles.out" 中
+  freopen("triangles.in", "r", stdin);
+  freopen("triangles.out", "w", stdout);
+
+  // n 表示栅栏柱子的数量
+  ll n;
+  cin >> n;
+
+  // 创建两个长度为 n 的向量，用于存储栅栏柱子的横坐标和纵坐标
+  vector<ll> X(n, 0);
+  vector<ll> Y(n, 0);
+
+  // 循环读取每个栅栏柱子的坐标，并存储到对应的向量中
+  for(ll i=0; i<n; i++) {
+    cin >> X[i] >> Y[i];
+  }
+
+  // best 用于存储符合条件的三角形中面积最大的一个
+  ll best = -1;
+
+  // 通过三重循环遍历所有可能的三个栅栏柱子的组合
+  for(ll i=0; i<n; i++) {
+    for(ll j=0; j<n; j++) {
+      for(ll k=0; k<n; k++) {
+        // 检查是否满足边与 x 轴平行、边与 y 轴平行的条件
+        if(Y[i]==Y[j] && X[i]==X[k]) {
+          // 计算这三个栅栏柱子组成的三角形的面积
+          ll area = (X[j]-X[i]) * (Y[k]-Y[i]);
+
+          // 取面积的绝对值，因为面积可能为负值
+          if(area < 0) { area *= -1; }
+
+          // 将计算得到的面积与之前记录的最大面积 best 进行比较，保留较大的面积作为新的 best
+          if(area > best) {
+            best = area;
+          }
+        }
+      }
+    }
+  }
